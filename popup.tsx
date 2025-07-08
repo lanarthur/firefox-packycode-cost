@@ -18,7 +18,6 @@ function IndexPopup() {
     }
   }
 
-  // Load analytics script
   useEffect(() => {
     const script = document.createElement("script")
     script.src = "//analytics.te.sb/count.js"
@@ -27,7 +26,6 @@ function IndexPopup() {
     document.head.appendChild(script)
 
     return () => {
-      // Cleanup: remove script when component unmounts
       if (document.head.contains(script)) {
         document.head.removeChild(script)
       }
@@ -68,7 +66,6 @@ function IndexPopup() {
             </p>
           </div>
 
-          {/* Token Status */}
           <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
@@ -88,7 +85,6 @@ function IndexPopup() {
               </div>
             </div>
 
-            {/* Token info */}
             <div className="mt-2 space-y-1">
               {tokenData.timestamp && (
                 <p className="text-xs text-gray-600 dark:text-gray-400">
@@ -130,7 +126,6 @@ function IndexPopup() {
             </div>
           )}
 
-          {/* Progress Bars */}
           {tokenData.isValid && !tokenExpiration.isExpired && (
             <div className="space-y-4">
               {error && (
@@ -197,7 +192,6 @@ function IndexPopup() {
             </div>
           )}
 
-          {/* Navigation Buttons */}
           <div className="border-t border-gray-200 dark:border-gray-700 pt-6 space-y-2">
             <div className="grid grid-cols-1 gap-2">
               <button

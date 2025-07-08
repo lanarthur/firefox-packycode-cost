@@ -13,7 +13,6 @@ export function ProgressBar({
   spent,
   title
 }: ProgressBarProps) {
-  // Ensure spent and budget are numbers and provide fallbacks
   const safeSpent = typeof spent === "number" && !isNaN(spent) ? spent : 0
   const safeBudget = typeof budget === "number" && !isNaN(budget) ? budget : 0
 

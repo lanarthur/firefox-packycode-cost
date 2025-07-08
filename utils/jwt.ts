@@ -61,27 +61,21 @@ export function getTokenExpiration(token: null | string): {
 
 export function parseJWT(token: string): JWTPayload | null {
   try {
-    // JWT format: header.payload.signature
     const parts = token.split(".")
     if (parts.length !== 3) {
       return null
     }
 
-    // Decode the payload (second part)
     const [, payload] = parts
 
-    // Add padding if needed for base64 decoding
     const paddedPayload = payload + "=".repeat((4 - (payload.length % 4)) % 4)
 
-    // Decode base64url to base64
     const base64 = paddedPayload.replace(/-/g, "+").replace(/_/g, "/")
 
-    // Parse JSON
     const decoded = JSON.parse(atob(base64))
 
     return decoded as JWTPayload
-  } catch (error) {
-    console.error("Failed to parse JWT:", error)
+  } catch {
     return null
   }
 }

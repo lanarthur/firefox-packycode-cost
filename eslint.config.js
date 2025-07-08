@@ -58,6 +58,7 @@ const config = tseslint.config([
       'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
       'no-duplicate-imports': 'error',
+      'no-empty': 'off',
       'no-var': 'error',
       'prefer-const': 'error',
 
@@ -118,6 +119,21 @@ const config = tseslint.config([
       '.commitlintrc.js',
       '.pnpmfile.cjs',
       'turbo.json',
+      // Plasmo specific
+      '.plasmo/**',
+      // Environment and log files
+      '.env*.local',
+      '*.log',
+      '.pnpm-debug.log*',
+      'npm-debug.log*',
+      'yarn-debug.log*',
+      'yarn-error.log*',
+      // TypeScript build info
+      '.tsbuildinfo',
+      // macOS
+      '.DS_Store',
+      // PEM files
+      '*.pem',
     ],
   },
 ]);

@@ -30,7 +30,6 @@ export function useUserInfo(token: null | string): UserInfoData {
     userInfo: null
   })
 
-  // Load cached data on mount
   useEffect(() => {
     const loadCachedData = async () => {
       try {
@@ -39,7 +38,6 @@ export function useUserInfo(token: null | string): UserInfoData {
 
         if (cachedUserInfo && cacheTimestamp) {
           const age = Date.now() - Number(cacheTimestamp)
-          // Use cache if less than 5 minutes old
           if (age < 5 * 60 * 1000) {
             setData((prev) => ({
               ...prev,
@@ -47,9 +45,7 @@ export function useUserInfo(token: null | string): UserInfoData {
             }))
           }
         }
-      } catch (error) {
-        console.error("Failed to load cached user info:", error)
-      }
+      } catch {}
     }
 
     loadCachedData()
@@ -76,10 +72,8 @@ export function useUserInfo(token: null | string): UserInfoData {
       )
 
       if (!response.ok) {
-        // If it's an authentication error (401/403), clear auth data
         if (response.status === 401 || response.status === 403) {
           await clearPluginTokenOnly()
-          // Reload the popup to reflect the cleared state
           window.location.reload()
           return
         }
@@ -88,7 +82,6 @@ export function useUserInfo(token: null | string): UserInfoData {
 
       const rawData = await response.json()
 
-      // Validate and convert the data
       const userInfo: UserInfo = {
         daily_budget_usd: Number(rawData.daily_budget_usd) || 0,
         daily_spent_usd: Number(rawData.daily_spent_usd) || 0,
@@ -96,7 +89,6 @@ export function useUserInfo(token: null | string): UserInfoData {
         monthly_spent_usd: Number(rawData.monthly_spent_usd) || 0
       }
 
-      // Cache the data
       await storage.set("cached_user_info", userInfo)
       await storage.set("cache_timestamp", Date.now())
 
@@ -111,7 +103,6 @@ export function useUserInfo(token: null | string): UserInfoData {
   }, [token])
 
   useEffect(() => {
-    // Always fetch when token is available, regardless of cache
     if (token) {
       fetchUserInfo()
     }

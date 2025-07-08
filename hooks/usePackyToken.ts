@@ -28,12 +28,11 @@ export function usePackyToken(): TokenData {
   })
 
   useEffect(() => {
-    // Get stored token from background script
     chrome.runtime.sendMessage({ action: "getStoredToken" }, (response) => {
       if (response) {
         const { timestamp, token } = response
         const isValid =
-          token && timestamp && Date.now() - timestamp < 24 * 60 * 60 * 1000 // Valid for 24 hours
+          token && timestamp && Date.now() - timestamp < 24 * 60 * 60 * 1000
 
         setTokenData({
           isValid: !!isValid,
