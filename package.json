@@ -72,7 +72,8 @@
     "permissions": [
       "cookies",
       "storage",
-      "tabs"
+      "tabs",
+      "alarms"
     ]
   }
 }

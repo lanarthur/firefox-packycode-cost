@@ -1,16 +1,9 @@
 import { Storage } from "@plasmohq/storage"
 import { useCallback, useEffect, useState } from "react"
 
-import { clearPluginTokenOnly } from "../utils/auth"
+import { fetchUserInfo, UserInfo } from "../utils/userInfo"
 
 const storage = new Storage()
-
-export interface UserInfo {
-  daily_budget_usd: number
-  daily_spent_usd: number
-  monthly_budget_usd: number
-  monthly_spent_usd: number
-}
 
 export interface UserInfoData {
   error: null | string
@@ -51,7 +44,7 @@ export function useUserInfo(token: null | string): UserInfoData {
     loadCachedData()
   }, [])
 
-  const fetchUserInfo = useCallback(async () => {
+  const fetchUserInfoData = useCallback(async () => {
     if (!token) {
       setData({ error: null, loading: false, userInfo: null })
       return
@@ -60,39 +53,14 @@ export function useUserInfo(token: null | string): UserInfoData {
     setData((prev) => ({ ...prev, error: null, loading: true }))
 
     try {
-      const response = await fetch(
-        "https://www.packycode.com/api/backend/users/info",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          },
-          method: "GET"
-        }
-      )
+      const userInfo = await fetchUserInfo()
 
-      if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
-          await clearPluginTokenOnly()
-          window.location.reload()
-          return
-        }
-        throw new Error(`HTTP error! status: ${response.status}`)
+      if (userInfo) {
+        setData({ error: null, loading: false, userInfo })
+      } else {
+        setData({ error: null, loading: false, userInfo: null })
+        window.location.reload()
       }
-
-      const rawData = await response.json()
-
-      const userInfo: UserInfo = {
-        daily_budget_usd: Number(rawData.daily_budget_usd) || 0,
-        daily_spent_usd: Number(rawData.daily_spent_usd) || 0,
-        monthly_budget_usd: Number(rawData.monthly_budget_usd) || 0,
-        monthly_spent_usd: Number(rawData.monthly_spent_usd) || 0
-      }
-
-      await storage.set("cached_user_info", userInfo)
-      await storage.set("cache_timestamp", Date.now())
-
-      setData({ error: null, loading: false, userInfo })
     } catch (error) {
       setData({
         error: error instanceof Error ? error.message : "获取用户信息失败",
@@ -104,12 +72,12 @@ export function useUserInfo(token: null | string): UserInfoData {
 
   useEffect(() => {
     if (token) {
-      fetchUserInfo()
+      fetchUserInfoData()
     }
-  }, [fetchUserInfo, token])
+  }, [fetchUserInfoData, token])
 
   return {
     ...data,
-    refresh: fetchUserInfo
+    refresh: fetchUserInfoData
   }
 }

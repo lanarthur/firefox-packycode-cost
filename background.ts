@@ -1,6 +1,36 @@
 import { Storage } from "@plasmohq/storage"
 
+import { fetchUserInfo } from "./utils/userInfo"
+
 const storage = new Storage()
+
+async function backgroundFetchUserInfo() {
+  try {
+    await fetchUserInfo()
+  } catch (error) {
+    console.error("Background fetch failed:", error)
+  }
+}
+
+async function updateBadge() {
+  try {
+    const cachedUserInfo = await storage.get("cached_user_info")
+
+    if (cachedUserInfo && cachedUserInfo.daily_budget_usd > 0) {
+      const percentage = Math.round(
+        (cachedUserInfo.daily_spent_usd / cachedUserInfo.daily_budget_usd) * 100
+      )
+
+      chrome.action.setBadgeText({
+        text: `${Math.min(percentage, 100)}%`
+      })
+    } else {
+      chrome.action.setBadgeText({ text: "" })
+    }
+  } catch {
+    chrome.action.setBadgeText({ text: "" })
+  }
+}
 
 chrome.tabs.onUpdated.addListener(async (_, changeInfo, tab) => {
   if (changeInfo.status === "complete" && tab.url?.includes("packycode.com")) {
@@ -27,4 +57,48 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
     })
     return true
   }
+
+  if (request.action === "updateBadge") {
+    updateBadge()
+    sendResponse({ success: true })
+    return true
+  }
 })
+
+chrome.storage.onChanged.addListener((changes) => {
+  if (changes.cached_user_info) {
+    updateBadge()
+  }
+})
+
+function startPeriodicRefresh() {
+  chrome.alarms.create("refreshUserInfo", {
+    delayInMinutes: 0.5, // 30秒后首次执行
+    periodInMinutes: 0.5 // 每30秒重复执行
+  })
+}
+
+function stopPeriodicRefresh() {
+  chrome.alarms.clear("refreshUserInfo")
+}
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === "refreshUserInfo") {
+    backgroundFetchUserInfo()
+  }
+})
+
+chrome.runtime.onSuspend.addListener(() => {
+  stopPeriodicRefresh()
+})
+
+chrome.runtime.onStartup.addListener(() => {
+  startPeriodicRefresh()
+})
+
+chrome.runtime.onInstalled.addListener(() => {
+  startPeriodicRefresh()
+})
+
+updateBadge()
+startPeriodicRefresh()
