@@ -1,6 +1,6 @@
 import { Storage } from "@plasmohq/storage"
 
-import { fetchUserInfo } from "./utils/userInfo"
+import { fetchUserInfo, type UserInfo } from "./utils/userInfo"
 
 const storage = new Storage()
 
@@ -14,7 +14,7 @@ async function backgroundFetchUserInfo() {
 
 async function updateBadge() {
   try {
-    const cachedUserInfo = await storage.get("cached_user_info")
+    const cachedUserInfo = await storage.get<UserInfo>("cached_user_info")
 
     if (cachedUserInfo && cachedUserInfo.daily_budget_usd > 0) {
       const percentage = Math.round(

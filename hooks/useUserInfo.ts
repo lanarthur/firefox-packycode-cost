@@ -1,7 +1,7 @@
 import { Storage } from "@plasmohq/storage"
 import { useCallback, useEffect, useState } from "react"
 
-import { fetchUserInfo, UserInfo } from "../utils/userInfo"
+import { fetchUserInfo, type UserInfo } from "../utils/userInfo"
 
 const storage = new Storage()
 
@@ -26,15 +26,15 @@ export function useUserInfo(token: null | string): UserInfoData {
   useEffect(() => {
     const loadCachedData = async () => {
       try {
-        const cachedUserInfo = await storage.get("cached_user_info")
-        const cacheTimestamp = await storage.get("cache_timestamp")
+        const cachedUserInfo = await storage.get<UserInfo>("cached_user_info")
+        const cacheTimestamp = await storage.get<number>("cache_timestamp")
 
         if (cachedUserInfo && cacheTimestamp) {
           const age = Date.now() - Number(cacheTimestamp)
           if (age < 5 * 60 * 1000) {
             setData((prev) => ({
               ...prev,
-              userInfo: cachedUserInfo as unknown as UserInfo
+              userInfo: cachedUserInfo
             }))
           }
         }
