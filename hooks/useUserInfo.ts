@@ -31,7 +31,8 @@ export function useUserInfo(token: null | string): UserInfoData {
 
         if (cachedUserInfo && cacheTimestamp) {
           const age = Date.now() - Number(cacheTimestamp)
-          if (age < 5 * 60 * 1000) {
+          // 缓存有效期调整为30秒，适合预算监控的实时性需求
+          if (age < 30 * 1000) {
             setData((prev) => ({
               ...prev,
               userInfo: cachedUserInfo
