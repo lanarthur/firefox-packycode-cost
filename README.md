@@ -11,6 +11,12 @@
   ![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=flat&logo=google-chrome&logoColor=white)
 </div>
 
+## 📷 功能截图
+
+<div align="center">
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/935a74f6-b731-484e-a86e-44c8d1c65a56" />
+</div>
+
 ## ✨ 功能特性
 
 - 📊 **实时监控**: 查看每日和每月的 API 使用情况
