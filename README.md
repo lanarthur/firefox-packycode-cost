@@ -11,10 +11,14 @@
   ![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=flat&logo=google-chrome&logoColor=white)
 </div>
 
-## 📷 功能截图
+## 📷 功能预览
 
 <div align="center">
-<img width="400" alt="image" src="https://github.com/user-attachments/assets/935a74f6-b731-484e-a86e-44c8d1c65a56" />
+  <picture>
+    <img width="600" alt="PackyCode Cost Monitor 界面预览" src="https://github.com/user-attachments/assets/935a74f6-b731-484e-a86e-44c8d1c65a56" />
+  </picture>
+  
+  <p><em>实时监控您的 PackyCode 使用情况和预算</em></p>
 </div>
 
 ## ✨ 功能特性
@@ -30,8 +34,15 @@
 
 ### 安装
 
-1. 从 [Chrome Web Store](https://chrome.google.com/webstore) 安装（即将上线）
-2. 或者从 [Releases](https://github.com/94mashiro/packycode-cost/releases) 下载最新版本手动安装
+#### 方式一：Chrome Web Store 安装（推荐）
+- 从 [Chrome Web Store](https://chromewebstore.google.com/detail/packycode-cost/aeddjefljmkfbocmkpienjblkdgpnamk) 安装
+- **优点**：安装方便，自动更新，无需手动管理
+- **缺点**：更新可能不够及时，需要等待商店审核
+
+#### 方式二：手动安装（获取最新版本）
+- 从 [Releases](https://github.com/94mashiro/packycode-cost/releases) 下载最新版本
+- **优点**：可以第一时间获取最新功能和修复
+- **缺点**：需要手动下载和更新，安装步骤相对复杂
 
 ### 开发环境设置
 
