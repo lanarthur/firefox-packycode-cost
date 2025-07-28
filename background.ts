@@ -21,14 +21,24 @@ async function updateBadge() {
         (cachedUserInfo.daily_spent_usd / cachedUserInfo.daily_budget_usd) * 100
       )
 
-      chrome.action.setBadgeText({
-        text: `${Math.min(percentage, 100)}%`
-      })
+      // Firefox uses browserAction, Chrome uses action
+      const badgeAPI = chrome.browserAction || chrome.action
+      if (badgeAPI) {
+        badgeAPI.setBadgeText({
+          text: `${Math.min(percentage, 100)}%`
+        })
+      }
     } else {
-      chrome.action.setBadgeText({ text: "" })
+      const badgeAPI = chrome.browserAction || chrome.action
+      if (badgeAPI) {
+        badgeAPI.setBadgeText({ text: "" })
+      }
     }
   } catch {
-    chrome.action.setBadgeText({ text: "" })
+    const badgeAPI = chrome.browserAction || chrome.action
+    if (badgeAPI) {
+      badgeAPI.setBadgeText({ text: "" })
+    }
   }
 }
 
@@ -44,7 +54,9 @@ chrome.tabs.onUpdated.addListener(async (_, changeInfo, tab) => {
         await storage.set("packy_token", tokenCookie.value)
         await storage.set("packy_token_timestamp", Date.now())
       }
-    } catch {}
+    } catch (error) {
+      // Cookie API may fail in temporary Firefox addons
+    }
   }
 })
 
@@ -53,6 +65,15 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
     storage.get("packy_token").then((token) => {
       storage.get("packy_token_timestamp").then((timestamp) => {
         sendResponse({ timestamp, token })
+      })
+    })
+    return true
+  }
+
+  if (request.action === "storeToken") {
+    storage.set("packy_token", request.token).then(() => {
+      storage.set("packy_token_timestamp", request.timestamp).then(() => {
+        sendResponse({ success: true })
       })
     })
     return true

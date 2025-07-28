@@ -3,7 +3,7 @@
   "displayName": "PackyCode Cost",
   "version": "1.2.0",
   "description": "PackyCode 使用额度和预算监控插件，实时查看每日和每月额度使用情况",
-  "author": "Mashiro",
+  "author": "lanarthur",
   "keywords": [
     "packycode",
     "api",
@@ -12,21 +12,26 @@
     "usage",
     "cost",
     "browser-extension",
-    "chrome-extension"
+    "chrome-extension",
+    "firefox-extension",
+    "firefox-addon"
   ],
-  "homepage": "https://github.com/94mashiro/packycode-cost",
+  "homepage": "https://github.com/lanarthur/firefox-packycode-cost",
   "repository": {
     "type": "git",
-    "url": "https://github.com/94mashiro/packycode-cost.git"
+    "url": "https://github.com/lanarthur/firefox-packycode-cost.git"
   },
   "bugs": {
-    "url": "https://github.com/94mashiro/packycode-cost/issues"
+    "url": "https://github.com/lanarthur/firefox-packycode-cost/issues"
   },
   "license": "MIT",
   "scripts": {
     "dev": "plasmo dev",
+    "dev:firefox": "plasmo dev --target=firefox-mv2",
     "build": "plasmo build",
+    "build:firefox": "plasmo build --target=firefox-mv2",
     "package": "plasmo package",
+    "package:firefox": "plasmo package --target=firefox-mv2",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
     "format": "prettier --write .",
@@ -49,6 +54,7 @@
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
+    "@types/webextension-polyfill": "^0.12.1",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.30.1",
     "eslint-config-prettier": "^10.1.5",
@@ -60,20 +66,30 @@
     "prettier": "3.2.4",
     "tailwindcss": "^3.4.17",
     "typescript": "5.3.3",
-    "typescript-eslint": "^8.36.0"
+    "typescript-eslint": "^8.36.0",
+    "webextension-polyfill": "^0.12.0"
   },
   "manifest": {
     "host_permissions": [
       "https://www.packycode.com/*",
       "https://packy.te.sb/*",
-      "https://packy-status.te.sb/*",
-      "https://analytics.te.sb/*"
+      "https://packy-status.te.sb/*"
     ],
     "permissions": [
       "cookies",
       "storage",
       "tabs",
-      "alarms"
-    ]
+      "alarms",
+      "activeTab"
+    ],
+    "background": {
+      "persistent": false
+    },
+    "browser_specific_settings": {
+      "gecko": {
+        "id": "packycode-cost@mashiro.dev"
+      }
+    },
+    "content_security_policy": "script-src 'self'; object-src 'self';"
   }
 }

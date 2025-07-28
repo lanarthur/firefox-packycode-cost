@@ -1,7 +1,5 @@
 import "./reset.css"
 
-import { useEffect } from "react"
-
 import { ActionButtons } from "./components/ActionButtons"
 import { AuthenticationPrompt } from "./components/AuthenticationPrompt"
 import { BudgetResetCountdown } from "./components/BudgetResetCountdown"
@@ -23,20 +21,6 @@ function IndexPopup() {
       refresh()
     }
   }
-
-  useEffect(() => {
-    const script = document.createElement("script")
-    script.src = "//analytics.te.sb/count.js"
-    script.async = true
-    script.setAttribute("data-goatcounter", "https://analytics.te.sb/count")
-    document.head.appendChild(script)
-
-    return () => {
-      if (document.head.contains(script)) {
-        document.head.removeChild(script)
-      }
-    }
-  }, [])
 
   return (
     <div className="h-[600px] w-[400px] m-0 p-0 overflow-hidden bg-white dark:bg-gray-900">
